@@ -19,15 +19,15 @@
 
     - name: set fact (kernel_latest)
       set_fact:
-        kernel_latest: "{{ ansible_facts.packages.kernel | sort | first }}"
+        kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | first }}"
 
     - name: set fact (kernel_latest_version)
       set_fact:
-        kernel_latest_version: "{{ kernel_latest.version }}-{{ kernel_latest.release }}.{{ kernel_latest.arch }}"
+        kernel_latest: "{{ kernel_latest_dict.version }}-{{ kernel_latest_dict.release }}.{{ kernel_latest_dict.arch }}"
 
     - name: reboot when kernel update is available
       reboot:
         reboot_timeout: "{{ reboot_timeout }}"
-      when: not kernel_latest_version == ansible_kernel
+      when: not kernel_latest == ansible_kernel
 
   when: ansible_os_family == "RedHat"
