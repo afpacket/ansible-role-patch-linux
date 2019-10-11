@@ -1,0 +1,18 @@
+galaxy_info:
+  role_name: patch_linux 
+  author: afpacket
+  license: MIT
+  min_ansible_version: 2.5
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+
+dependencies: []

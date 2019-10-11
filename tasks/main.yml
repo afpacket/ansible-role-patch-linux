@@ -1,0 +1,33 @@
+- block:
+
+    - name: upgrade all packages (yum)
+      yum:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "yum"
+
+    - name: upgrade all packages (dnf)
+      dnf:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "dnf"
+
+    - name: Gathering Package Facts
+      package_facts:
+
+    - name: set fact (kernel_latest)
+      set_fact:
+        kernel_latest: "{{ ansible_facts.packages.kernel | sort | first }}"
+
+    - name: set fact (kernel_latest_version)
+      set_fact:
+        kernel_latest_version: "{{ kernel_latest.version }}-{{ kernel_latest.release }}.{{ kernel_latest.arch }}"
+
+    - name: reboot when kernel update is available
+      reboot:
+        reboot_timeout: "{{ reboot_timeout }}"
+      when: not kernel_latest_version == ansible_kernel
+
+  when: ansible_os_family == "RedHat"
