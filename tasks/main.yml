@@ -17,11 +17,11 @@
     - name: Gathering Package Facts
       package_facts:
 
-    - name: set fact (kernel_latest)
+    - name: set fact (kernel_latest_dict)
       set_fact:
         kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | first }}"
 
-    - name: set fact (kernel_latest_version)
+    - name: set fact (kernel_latest)
       set_fact:
         kernel_latest: "{{ kernel_latest_dict.version }}-{{ kernel_latest_dict.release }}.{{ kernel_latest_dict.arch }}"
 
